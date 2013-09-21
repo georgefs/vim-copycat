@@ -1,6 +1,9 @@
-function! s:copy()
-
-let reg_name = input("copycat --name :")
+function! s:copy(named)
+if a:named == 1
+    let reg_name = input("copycat --name :")
+else
+    let reg_name = ''
+endif
 python << EOF
 import vim
 import copycat
@@ -12,9 +15,13 @@ EOF
 endfunction
 
 
-function! s:paste()
+function! s:paste(named)
+if a:named == 1
+    let reg_name = input("copycat --name :")
+else
+    let reg_name = ''
+endif
 
-let reg_name = input("copycat --paste --name :")
 python << EOF
 import vim
 import copycat
@@ -47,7 +54,10 @@ EOF
 
 endfunction
 
-vmap <silent> <C-c>c y:call <SID>copy()<CR>
-imap <silent> <C-c>p <ESC>y:call <SID>paste()<CR>p 
+vmap <silent> <C-c>c y:call <SID>copy(0)<CR>
+imap <silent> <C-c>p <ESC>y:call <SID>paste(0)<CR>
 nmap <silent> <C-c>l :call <SID>list()<CR>
 nmap <silent> <C-c>d :call <SID>delete()<CR>
+
+vmap <silent> <C-c>C y:call <SID>copy(1)<CR>
+imap <silent> <C-c>P <ESC>y:call <SID>paste(1)<CR> 
