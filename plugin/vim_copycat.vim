@@ -22,12 +22,16 @@ else
     let reg_name = ''
 endif
 
+
 python << EOF
 import vim
 import copycat
+import re
 reg_name = vim.eval('reg_name')
 data = copycat.paste()
-vim.command("normal a"+data)
+data = re.sub(r'([\"\\])', r'\\\1', data)
+print "let @a=\'{}\'".format(data)
+vim.command('let @a=\"{}\"'.format(data))
 EOF
 
 endfunction
@@ -55,7 +59,7 @@ EOF
 endfunction
 
 vmap <silent> <C-c>c y:call <SID>copy(0)<CR>
-imap <silent> <C-c>p <ESC>y:call <SID>paste(0)<CR>
+imap <silent> <C-c>p <ESC>y:call <SID>paste(0)<CR>"ap
 nmap <silent> <C-c>l :call <SID>list()<CR>
 nmap <silent> <C-c>d :call <SID>delete()<CR>
 
