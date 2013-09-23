@@ -28,9 +28,12 @@ import vim
 import copycat
 import re
 reg_name = vim.eval('reg_name')
+tmp = vim.eval('@a')
 data = copycat.paste()
 data = re.sub(r'([\"\\])', r'\\\1', data)
-print "let @a=\'{}\'".format(data)
+vim.command('let @a=\"{}\"'.format(data))
+vim.command('norm \"ap')
+data = re.sub(r'([\"\\])', r'\\\1', tmp)
 vim.command('let @a=\"{}\"'.format(data))
 EOF
 
@@ -59,7 +62,7 @@ EOF
 endfunction
 
 vmap <silent> <C-c>c y:call <SID>copy(0)<CR>
-imap <silent> <C-c>p <ESC>y:call <SID>paste(0)<CR>"ap
+imap <silent> <C-c>p <ESC>y:call <SID>paste(0)<CR>
 nmap <silent> <C-c>l :call <SID>list()<CR>
 nmap <silent> <C-c>d :call <SID>delete()<CR>
 
