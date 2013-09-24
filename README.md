@@ -1,6 +1,6 @@
 Introduction
 ---
-vim_copycat provides much simpler way to share clipboard with termatil and system
+vim-copycat provides much simpler way to share clipboard with termatil and system
 
 
 Requirement
