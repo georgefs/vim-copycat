@@ -1,137 +1,189 @@
 " ----------------------------------
+"
 "  default settings for vim-copycat
+" reg vim reg which is share with copycat '' as default as @"
+" clip copycat reg name which is share with vim '' as default as system clip 
+" ----------------------------------
+let s:settings = {
+    \ 'reg': '',
+    \ 'clip': '',
+    \ 'overwrite_ctrlkeys': 1,
+    \ 'auto_sync': 1,
+    \}
+
+
+
+" ----------------------------------
+"
+"  initialize
+"
 " ----------------------------------
 
-let s:settings = {
-    \ 'default_clipboard': "'copycat'",
-    \ 'overwrite_ctrlkeys': 1
-    \}
+
+
+python << EOF
+import sys
+import vim
+sys.path.append(vim.eval('expand("<sfile>:p:h:h")'))
+import copycat_plugin
+EOF
+
 
 " eval if any global setting exists
 for [key, val] in items(s:settings)
     if !exists('g:copycat#'.key)
-        exe 'let g:copycat#'.key.' = '.val
+        let g:copycat#{key} = val
     endif
 endfor
 
 
-" -------------------------------------------------------
-"  Transfering content between copycat and VIM registers
-" -------------------------------------------------------
-
-
-" save value to specified VIM register
-function! s:save_to_register(registername, value)
-
-python << EOF
-import vim
-
-registername = vim.eval('a:registername')
-value = vim.eval('a:value')
-
-if registername not in ["\"", "-", "+", "*", "/"]:
-    vim.command('return 0')
-elif registername not in [str(i) for i in range(10)]:
-    vim.command('return 0')
-
-vim.command("let @%s = \"%s\"" % (registername, value))
-
-EOF
-
-endfunction
-
-" save value to specified copycat clipboard
-function! s:save_to_copycat(clipboard_name, value)
-
-python << EOF
-import vim
-import copycat
-
-clipboard_name = vim.eval('a:clipboard_name')
-value = vim.eval('a:value')
-if clipboard_name == 'default':
-    clipboard_name = None
-
-copycat.copy(value=value, name=clipboard_name)
-EOF
-
-endfunction
-
-function! s:copy(named)
-    
-    if a:named == 1
-        let reg_name = input("copycat --name :")
-    else
-        let reg_name = ''
-    endif
-
-python << EOF
-    import vim
-    import copycat
-    reg_name = vim.eval('reg_name')
-    value = vim.eval('@0')
-    copycat.copy(name=reg_name, value=value)
-EOF
-
-endfunction
-
-function! s:paste(named)
-
-    if a:named == 1
-        let reg_name = input("copycat --name :")
-    else
-        let reg_name = ''
-    endif
-
-
-python << EOF
-    import vim
-    import copycat
-    import re
-
-    reg_name = vim.eval('reg_name')
-    tmp = vim.eval('@a')
-    data = copycat.paste()
-    data = re.sub(r'([\"\\])', r'\\\1', data)
-    vim.command('let @a=\"{}\"'.format(data))
-    vim.command('norm \"ap')
-    data = re.sub(r'([\"\\])', r'\\\1', tmp)
-    vim.command('let @a=\"{}\"'.format(data))
-EOF
-
-endfunction
-
-
-function! s:delete()
-
-let reg_name = input("copycat --delete --name :")
-
-python << EOF
-    import vim
-    import copycat
-    reg_name = vim.eval('reg_name')
-    data = copycat.delete(reg_name)
-EOF
-
-endfunction
-
-function! s:list()
-
-python << EOF
-    import copycat
-    copycat.view()
-EOF
-
-endfunction
-
 if exists('g:copycat#overwrite_ctrlkeys')
-    vmap <silent> <C-c>c y:call <SID>copy(0)<CR>
-    imap <silent> <C-c>p <ESC>y:call <SID>paste(0)<CR>
+    vmap <silent> <C-c>c y:call <SID>copy(0, g:copycat#reg)<CR>
+    imap <silent> <C-c>p <ESC>y:call <SID>paste(0, g:copycat#reg)<CR>
     nmap <silent> <C-c>l :call <SID>list()<CR>
     nmap <silent> <C-c>d :call <SID>delete()<CR>
 
-    vmap <silent> <C-c>C y:call <SID>copy(1)<CR>
-    imap <silent> <C-c>P <ESC>y:call <SID>paste(1)<CR> 
+    vmap <silent> <C-c>C y:call <SID>copy(1, g:copycat#reg)<CR>
+    imap <silent> <C-c>P <ESC>y:call <SID>paste(1, g:copycat#reg)<CR> 
 endif
 
-" vim:set et sw=4:
+if exists('g:copycat#auto_sync')
+    vn y y:call <SID>push_into_clip(@", g:copycat#clip)<CR>
+    nn yy yy:call <SID>push_into_clip(@", g:copycat#clip)<CR>
+    nn Y Y:call <SID>push_into_clip(@", g:copycat#clip)<CR>
+
+    nn p :let @"=<SID>pop_from_clip(g:copycat#clip)<CR>p
+endif
+
+
+
+" ----------------------------------
+"
+"  vim utils
+"
+" ----------------------------------
+
+function! s:get_clip(run)
+    if a:run
+        return input("copycat clip name:")
+    elseif exists('g:copycat#clip') 
+        return g:copycat#clip
+    else
+        return ""
+    endif
+endfunction
+
+
+function! s:safe_copy()
+    let l:tmp=@"
+    norm y
+    let l:result=@"
+    let @"=l:tmp
+    return l:result
+endfunction
+
+
+function! s:safe_paste(value)
+    let l:tmp=@"
+    let @"=a:value
+    norm p
+    let @"=l:tmp
+endfunction
+
+
+" ----------------------------------
+"
+"  main function
+"
+" ----------------------------------
+" push value into copycat clip
+"
+" @value value which context push to copycat
+" @name copycat reg name where value save to
+" ----------------------------------
+function! s:push_into_clip(value, reg_name)
+
+python << EOF
+copycat_plugin.copy(value="a:value", name="a:reg_name")
+EOF
+
+endfunction
+
+
+" ----------------------------------
+" pop value from copycat clip
+"
+" @name copycat reg name
+" @reg_name vim reg name, where copycat value into
+" ----------------------------------
+function! s:pop_from_clip(name)
+python <<EOF
+copycat_plugin.paste(name="a:name", result="l:result")
+EOF
+return l:result
+endfunction
+
+
+" ----------------------------------
+" copy
+"
+" @named boolean on/off copycat name set
+" @reg_name sync value to reg_name
+" ----------------------------------
+function! s:copy(named, reg_name)
+    let l:reg_name = s:get_clip(a:named)
+    let l:value = s:safe_copy()
+    call s:push_into_clip(l:value, l:reg_name)
+
+    if a:reg_name!=""
+        let {a:reg_name} = @"
+    endif
+
+endfunction
+
+
+" ----------------------------------
+" paste
+"
+" @named boolean on/off copycat name set
+" @reg_name sync value to reg_name
+" ----------------------------------
+function! s:paste(named, reg_name)
+    let l:name = s:get_clip(a:named)
+
+    let l:result = s:pop_from_clip(l:name)
+
+    if a:reg_name!=""
+        let {a:reg_name} = @"
+    endif
+
+    call s:safe_paste(l:result)
+
+endfunction
+
+
+" ----------------------------------
+" delete
+" ----------------------------------
+function! s:delete()
+
+let l:reg_name = s:get_clip(1)
+
+python << EOF
+copycat_plugin.delete(name=vim.eval('l:reg_name'))
+EOF
+
+endfunction
+
+
+" ----------------------------------
+" list
+" ----------------------------------
+function! s:list()
+
+python << EOF
+copycat_plugin.list()
+EOF
+
+endfunction
+
