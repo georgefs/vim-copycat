@@ -6,7 +6,7 @@
 " ----------------------------------
 let s:settings = {
     \ 'reg': '',
-    \ 'clip': '',
+    \ 'clip': 'vim',
     \ 'overwrite_ctrlkeys': 1,
     \ 'auto_sync': 1,
     \}
@@ -51,6 +51,14 @@ if exists('g:copycat#auto_sync')
     vn y y:call <SID>push_into_clip(@", g:copycat#clip)<CR>
     nn yy yy:call <SID>push_into_clip(@", g:copycat#clip)<CR>
     nn Y Y:call <SID>push_into_clip(@", g:copycat#clip)<CR>
+
+    vn d d:call <SID>push_into_clip(@", g:copycat#clip)<CR>
+    nn dd dd:call <SID>push_into_clip(@", g:copycat#clip)<CR>
+    nn D D:call <SID>push_into_clip(@", g:copycat#clip)<CR>
+
+    vn c c:call <SID>push_into_clip(@", g:copycat#clip)<CR>
+    nn cc cc:call <SID>push_into_clip(@", g:copycat#clip)<CR>
+    nn C C:call <SID>push_into_clip(@", g:copycat#clip)<CR>
 
     nn p :let @"=<SID>pop_from_clip(g:copycat#clip)<CR>p
 endif
