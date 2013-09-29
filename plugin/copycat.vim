@@ -8,7 +8,7 @@ let s:settings = {
     \ 'reg': '',
     \ 'clip': 'vim',
     \ 'overwrite_ctrlkeys': 1,
-    \ 'auto_sync': 1,
+    \ 'auto_sync': 0,
     \}
 
 
