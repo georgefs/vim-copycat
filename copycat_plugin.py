@@ -54,7 +54,7 @@ def copy(value, name=None):
 
 @vim_command
 def paste(name=None):
-    name = vim.eval(name)
+    name = get_from_vim(name)
 
     return copycat.paste(name)
 
