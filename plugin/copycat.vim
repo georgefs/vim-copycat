@@ -37,7 +37,7 @@ for [key, val] in items(s:settings)
 endfor
 
 
-if exists('g:copycat#overwrite_ctrlkeys')
+if exists('g:copycat#overwrite_ctrlkeys') && g:copycat#overwrite_ctrlkeys == 1
     vmap <silent> <C-c>c y:call <SID>copy(0, g:copycat#reg)<CR>
     imap <silent> <C-c>p <ESC>y:call <SID>paste(0, g:copycat#reg)<CR>
     nmap <silent> <C-c>l :call <SID>list()<CR>
@@ -47,7 +47,7 @@ if exists('g:copycat#overwrite_ctrlkeys')
     imap <silent> <C-c>P <ESC>y:call <SID>paste(1, g:copycat#reg)<CR> 
 endif
 
-if exists('g:copycat#auto_sync')
+if exists('g:copycat#auto_sync') && g:copycat#auto_sync == 1
     vn y y:call <SID>push_into_clip(@", g:copycat#clip)<CR>
     nn yy yy:call <SID>push_into_clip(@", g:copycat#clip)<CR>
     nn Y Y:call <SID>push_into_clip(@", g:copycat#clip)<CR>
