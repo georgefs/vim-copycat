@@ -6,7 +6,7 @@
 " ----------------------------------
 let s:settings = {
     \ 'reg': '',
-    \ 'clip': 'vim',
+    \ 'clip': '',
     \ 'overwrite_ctrlkeys': 1,
     \ 'auto_sync': 0,
     \}
