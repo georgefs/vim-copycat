@@ -12,7 +12,6 @@ let s:settings = {
     \}
 
 
-
 " ----------------------------------
 "
 "  initialize
@@ -48,19 +47,19 @@ if exists('g:copycat#overwrite_ctrlkeys') && g:copycat#overwrite_ctrlkeys == 1
 endif
 
 if exists('g:copycat#auto_sync') && g:copycat#auto_sync == 1
-    vn y y:call <SID>push_into_clip(@", g:copycat#clip)<CR>
-    nn yy yy:call <SID>push_into_clip(@", g:copycat#clip)<CR>
-    nn Y Y:call <SID>push_into_clip(@", g:copycat#clip)<CR>
+    vn <silent> y y:call <SID>push_into_clip(@", g:copycat#clip)<CR>
+    nn <silent> yy yy:call <SID>push_into_clip(@", g:copycat#clip)<CR>
+    nn <silent> Y Y:call <SID>push_into_clip(@", g:copycat#clip)<CR>
 
-    vn d d:call <SID>push_into_clip(@", g:copycat#clip)<CR>
-    nn dd dd:call <SID>push_into_clip(@", g:copycat#clip)<CR>
-    nn D D:call <SID>push_into_clip(@", g:copycat#clip)<CR>
+    vn <silent> d d:call <SID>push_into_clip(@", g:copycat#clip)<CR>
+    nn <silent> dd dd:call <SID>push_into_clip(@", g:copycat#clip)<CR>
+    nn <silent> D D:call <SID>push_into_clip(@", g:copycat#clip)<CR>
 
-    vn c c<ESC>:call <SID>push_into_clip(@", g:copycat#clip)<CR>a
-    nn cc cc<ESC>:call <SID>push_into_clip(@", g:copycat#clip)<CR>a
-    nn C C<ESC>:call <SID>push_into_clip(@", g:copycat#clip)<CR>a
+    vn <silent> c c<ESC>:call <SID>push_into_clip(@", g:copycat#clip)<CR>a
+    nn <silent> cc cc<ESC>:call <SID>push_into_clip(@", g:copycat#clip)<CR>a
+    nn <silent> C C<ESC>:call <SID>push_into_clip(@", g:copycat#clip)<CR>a
 
-    nn p :let @"=<SID>pop_from_clip(g:copycat#clip)<CR>p
+    nn <silent> p :let @"=<SID>pop_from_clip(g:copycat#clip)<CR>p
 endif
 
 
