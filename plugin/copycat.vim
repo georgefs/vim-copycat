@@ -37,13 +37,13 @@ endfor
 
 
 if exists('g:copycat#overwrite_ctrlkeys') && g:copycat#overwrite_ctrlkeys == 1
-    vmap <silent> <C-c>c y:call <SID>copy(0, g:copycat#reg)<CR>
-    imap <silent> <C-c>p <ESC>y:call <SID>paste(0, g:copycat#reg)<CR>
-    nmap <silent> <C-c>l :call <SID>list()<CR>
-    nmap <silent> <C-c>d :call <SID>delete()<CR>
+    silent exec "vmap <silent> " . g:copycat#leader_key . "c y:call <SID>copy(0, g:copycat#reg)<CR>"
+    silent exec "imap <silent> " . g:copycat#leader_key . "p <ESC>y:call <SID>paste(0, g:copycat#reg)<CR>"
+    silent exec "nmap <silent> " . g:copycat#leader_key . "l :call <SID>list()<CR>"
+    silent exec "nmap <silent> " . g:copycat#leader_key . "d :call <SID>delete()<CR>"
 
-    vmap <silent> <C-c>C y:call <SID>copy(1, g:copycat#reg)<CR>
-    imap <silent> <C-c>P <ESC>y:call <SID>paste(1, g:copycat#reg)<CR> 
+    silent exec "vmap <silent>" . g:copycat#leader_key ."C y:call <SID>copy(1, g:copycat#reg)<CR>"
+    silent exec "imap <silent>" . g:copycat#leader_key ."P <ESC>y:call <SID>paste(1, g:copycat#reg)<CR>" 
 endif
 
 if exists('g:copycat#auto_sync') && g:copycat#auto_sync == 1
