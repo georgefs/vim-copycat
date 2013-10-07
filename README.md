@@ -24,6 +24,7 @@ Command
 Installation
 ===
 
+1. `sudo apt-get install python-pip`
 1. `sudo pip install copycat-clipboard`
 2. `cd ~/.vim/bundles`
 3. `git clone git@github.com:georgefs/vim-copycat.git`
