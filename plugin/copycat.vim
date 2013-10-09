@@ -55,9 +55,9 @@ if exists('g:copycat#auto_sync') && g:copycat#auto_sync == 1
     nn <silent> dd dd:call <SID>push_into_clip(@", g:copycat#clip)<CR>
     nn <silent> D D:call <SID>push_into_clip(@", g:copycat#clip)<CR>
 
-    vn <silent> c c<ESC>:call <SID>push_into_clip(@", g:copycat#clip)<CR>a
-    nn <silent> cc cc<ESC>:call <SID>push_into_clip(@", g:copycat#clip)<CR>a
-    nn <silent> C C<ESC>:call <SID>push_into_clip(@", g:copycat#clip)<CR>a
+    vn <silent> c c<ESC><ESC>:call <SID>push_into_clip(@", g:copycat#clip)<CR>a
+    nn <silent> cc cc<ESC><ESC>:call <SID>push_into_clip(@", g:copycat#clip)<CR>a
+    nn <silent> C C<ESC><ESC>:call <SID>push_into_clip(@", g:copycat#clip)<CR>a
 
     nn <silent> p :let @"=<SID>pop_from_clip(g:copycat#clip)<CR>p
 endif
